@@ -1,6 +1,9 @@
 # seclogon_execute_bof
 一个普通的BOF用来执行程序
 
+## 参考
+https://github.com/antonioCoco/MalSeclogon
+
 ## 免责声明
 该工具仅用于网络安全学习。
 
